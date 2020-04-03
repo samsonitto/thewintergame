@@ -15,4 +15,4 @@
 Date | Duration | Task
 --- | --- | ---
 30.03.2020 | 8h | Terrain, First person controller
-03.04.2020 | 4h | Gun, airplane, hunger, thirst, health 
+03.04.2020 | 10h | Gun, airplane, hunger, thirst, health, tiger, flashlight
