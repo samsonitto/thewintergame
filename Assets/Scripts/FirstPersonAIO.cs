@@ -247,6 +247,12 @@ public class BETA_SETTINGS{
     public float thirstIncreaseRate, hungerIncreaseRate;
     private float health, thirst, hunger;
     public bool dead;
+    public float damage;
+    public static bool triggeringWithAI;
+    public static GameObject triggeringAI;
+    public bool weaponEquipped;
+    public static bool triggeringWithTree;
+    public static GameObject treeObject;
 
     #endregion
 
@@ -416,7 +422,27 @@ public class BETA_SETTINGS{
             Die();
         if (hunger >= maxHunger)
             Die();
-        print("Thirst: " + thirst + "   Hunger: " + hunger);
+
+        //detecting and killing AI
+        if(triggeringWithAI == true && triggeringAI)
+        {
+            if (Input.GetMouseButtonDown(0))
+            {
+                Attack(triggeringAI);
+            }
+        }
+
+        if (!triggeringAI)
+            triggeringWithAI = false;
+
+        if(triggeringWithTree && treeObject)
+        {
+            if (Input.GetMouseButtonDown(0))
+            {
+                Attack(treeObject);
+            }
+        }
+        
         #endregion
     }
 
@@ -682,28 +708,30 @@ public class BETA_SETTINGS{
 
     }
 
-/*     public IEnumerator FOVKickOut()
-    {
-        float t = Mathf.Abs((playerCamera.fieldOfView - fOVKick.fovStart) / fOVKick.FOVKickAmount);
-        while(t < fOVKick.changeTime)
-        {
-            playerCamera.fieldOfView = fOVKick.fovStart + (fOVKick.KickCurve.Evaluate(t / fOVKick.changeTime) * fOVKick.FOVKickAmount);
-            t += Time.deltaTime;
-            yield return new WaitForEndOfFrame();
-        }
-    }
+    #region FPAIO methods
 
-    public IEnumerator FOVKickIn()
-    {
-        float t = Mathf.Abs((playerCamera.fieldOfView - fOVKick.fovStart) / fOVKick.FOVKickAmount);
-        while(t > 0)
+    /*     public IEnumerator FOVKickOut()
         {
-            playerCamera.fieldOfView = fOVKick.fovStart + (fOVKick.KickCurve.Evaluate(t / fOVKick.changeTime) * fOVKick.FOVKickAmount);
-            t -= Time.deltaTime;
-            yield return new WaitForEndOfFrame();
+            float t = Mathf.Abs((playerCamera.fieldOfView - fOVKick.fovStart) / fOVKick.FOVKickAmount);
+            while(t < fOVKick.changeTime)
+            {
+                playerCamera.fieldOfView = fOVKick.fovStart + (fOVKick.KickCurve.Evaluate(t / fOVKick.changeTime) * fOVKick.FOVKickAmount);
+                t += Time.deltaTime;
+                yield return new WaitForEndOfFrame();
+            }
         }
-        playerCamera.fieldOfView = fOVKick.fovStart;
-    } */
+
+        public IEnumerator FOVKickIn()
+        {
+            float t = Mathf.Abs((playerCamera.fieldOfView - fOVKick.fovStart) / fOVKick.FOVKickAmount);
+            while(t > 0)
+            {
+                playerCamera.fieldOfView = fOVKick.fovStart + (fOVKick.KickCurve.Evaluate(t / fOVKick.changeTime) * fOVKick.FOVKickAmount);
+                t -= Time.deltaTime;
+                yield return new WaitForEndOfFrame();
+            }
+            playerCamera.fieldOfView = fOVKick.fovStart;
+        } */
 
     public IEnumerator CameraShake(float Duration, float Magnitude){
         float elapsed =0;
@@ -739,6 +767,9 @@ public class BETA_SETTINGS{
         }
     }
 
+    #endregion
+
+    #region My Functions
     public void Die()
     {
         dead = true;
@@ -756,10 +787,56 @@ public class BETA_SETTINGS{
         if (hunger < 0)
             hunger = 0;
     }
+
+    public void OnTriggerStay(Collider other)
+    {
+        if(other.tag == "Tree")
+        {
+            triggeringWithTree = true;
+            treeObject = other.gameObject;
+        }
+    }
+
+    public void OnTriggerEnter(Collider other)
+    {
+        if(other.tag == "Animal")
+        {
+            triggeringAI = other.gameObject;
+            triggeringWithAI = true;
+        }
+    }
+    public void OnTriggerExit(Collider other)
+    {
+        if(other.tag == "Animal")
+        {
+            triggeringAI = null;
+            triggeringWithAI = false;
+        }
+    }
+
+    public void Attack(GameObject target)
+    {
+        if(target.tag == "Animal" && weaponEquipped)
+        {
+            Animal animal = target.GetComponent<Animal>();
+
+            animal.health -= damage;
+        }
+
+        if(target.tag == "Tree" && weaponEquipped)
+        {
+            Tree tree = target.GetComponent<Tree>();
+            tree.health -= damage;
+        }
+    }
+
+    #endregion
 }
 
+#region Unity Editor
+
 #if UNITY_EDITOR
-    [CustomEditor(typeof(FirstPersonAIO)),InitializeOnLoadAttribute]
+[CustomEditor(typeof(FirstPersonAIO)),InitializeOnLoadAttribute]
     public class FPAIO_Editor : Editor{
         FirstPersonAIO t;
         SerializedObject SerT;
@@ -938,6 +1015,7 @@ public class BETA_SETTINGS{
                 t.hungerIncreaseRate = EditorGUILayout.Slider(new GUIContent("Hunger Increase Rate", "Determines by how much the player's hunger rate is increasing. if ----"), t.hungerIncreaseRate, 0, 5);
                 t.maxThirst = EditorGUILayout.Slider(new GUIContent("Max Thirst", "Determines how thirsty the player can get. if ----"),t.maxThirst,0,150);
                 t.thirstIncreaseRate = EditorGUILayout.Slider(new GUIContent("Thirst Increase Rate", "Determines by how much the player's thirst rate is increasing. if left 0, stamina will not be used."),t.thirstIncreaseRate,0,5);
+                t.damage = EditorGUILayout.Slider(new GUIContent("Damage", "Damage done by the player."),t.damage,0,100);
                 GUI.enabled = t.playerCanMove; EditorGUI.indentLevel --;
 
             EditorGUILayout.Space();
@@ -1464,6 +1542,8 @@ public class BETA_SETTINGS{
         }
     }
 #endif
+
+#endregion
 
 
 

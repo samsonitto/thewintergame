@@ -6,6 +6,9 @@ TagManager:
   tags:
   - Rifle
   - Item
+  - Animal
+  - Tree
+  - ItemManager
   layers:
   - Default
   - TransparentFX

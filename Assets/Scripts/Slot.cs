@@ -55,21 +55,32 @@ public class Slot : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IP
             Item thisItem = item.GetComponent<Item>();
 
             // checking for item type
-            if(thisItem.type == "water")
+            if(thisItem.type == "Water")
             {
                 player.GetComponent<FirstPersonAIO>().Drink(thisItem.decreaseRate);
                 Destroy(item);
             }
-            else if (thisItem.type == "meat")
+            else if (thisItem.type == "Meat")
             {
                 player.GetComponent<FirstPersonAIO>().Eat(thisItem.decreaseRate);
                 Destroy(item);
             }
-            else if (thisItem.type == "apple")
+            else if (thisItem.type == "Apple")
             {
                 player.GetComponent<FirstPersonAIO>().Eat(thisItem.decreaseRate);
-                player.GetComponent<FirstPersonAIO>().Drink(thisItem.decreaseRate * 0.2f);
+                player.GetComponent<FirstPersonAIO>().Drink(thisItem.decreaseRate * 0.5f);
                 Destroy(item);
+            }
+            else if (thisItem.type == "Weapon" && !player.GetComponent<FirstPersonAIO>().weaponEquipped)
+            {
+                thisItem.equipped = true;
+                item.SetActive(true);
+                player.GetComponent<FirstPersonAIO>().weaponEquipped = true;
+            }
+            else if (thisItem.type == "Flashlight")
+            {
+                thisItem.flashlightEquipped = true;
+                item.SetActive(true);
             }
         }
     }

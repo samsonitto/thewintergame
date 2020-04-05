@@ -5,6 +5,14 @@ using UnityEngine.AI;
 
 public class Animal : MonoBehaviour
 {
+    private GameObject player;
+
+    public float health;
+    private bool dead;
+
+    public int amountOfItems;
+    public GameObject[] item;
+
     public float radius;
     public float timer;
 
@@ -20,10 +28,14 @@ public class Animal : MonoBehaviour
 
     void OnEnable()
     {
+        player = GameObject.FindWithTag("Player");
+
         agent = GetComponent<NavMeshAgent>();
         anim = GetComponent<Animation>();
         currentTimer = timer;
         currentIdleTimer = idleTimer;
+
+        print(anim);
     }
 
     void Update()
@@ -47,6 +59,11 @@ public class Animal : MonoBehaviour
             anim.CrossFade("idle");
         else
             anim.CrossFade("walk");
+
+        if(health <= 0)
+        {
+            Die();
+        }
     }
 
     IEnumerator switchIdle()
@@ -55,6 +72,21 @@ public class Animal : MonoBehaviour
         yield return new WaitForSeconds(3);
         currentIdleTimer = 0;
         idle = false;
+    }
+
+    public void DropItems()
+    {
+        for(int i = 0; i < amountOfItems; i++)
+        {
+            GameObject droppedItem = Instantiate(item[i], transform.position, Quaternion.identity);
+            break;
+        }
+    }
+
+    public void Die()
+    {
+        DropItems();
+        Destroy(this.gameObject);
     }
 
     public static Vector3 RandomNavSphere(Vector3 origin, float distance, int layerMask)
