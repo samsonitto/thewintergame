@@ -245,7 +245,8 @@ public class BETA_SETTINGS{
 
     public float maxHealth, maxThirst, maxHunger;
     public float thirstIncreaseRate, hungerIncreaseRate;
-    private float health, thirst, hunger;
+    public static float health = 100f;
+    private float thirst, hunger;
     public bool dead;
     public float damage;
     public static bool triggeringWithAI;
@@ -253,6 +254,8 @@ public class BETA_SETTINGS{
     public bool weaponEquipped;
     public static bool triggeringWithTree;
     public static GameObject treeObject;
+    public Text statsInfoUI;
+    public Text info;
 
     #endregion
 
@@ -281,8 +284,8 @@ public class BETA_SETTINGS{
         #endregion
 
         #region BETA_SETTINGS - Awake
-    
-#endregion
+
+        #endregion
 
     }
 
@@ -354,6 +357,10 @@ public class BETA_SETTINGS{
         #region BETA_SETTINGS - Start
         fOVKick.fovStart = playerCamera.fieldOfView;
         #endregion
+
+        #region Dynamic Settings
+        info.GetComponent<Text>().enabled = false;
+        #endregion
     }
 
     private void Update()
@@ -412,6 +419,8 @@ public class BETA_SETTINGS{
 
         #region Dynamic Settings - Update
 
+        ShowStats();
+
         if (!dead)
         {
             hunger += hungerIncreaseRate * Time.deltaTime;
@@ -419,9 +428,14 @@ public class BETA_SETTINGS{
         }
 
         if (thirst >= maxThirst)
-            Die();
+            health -= 2;
         if (hunger >= maxHunger)
+            health -= 1;
+
+        if(health <= 0)
+        {
             Die();
+        }
 
         //detecting and killing AI
         if(triggeringWithAI == true && triggeringAI)
@@ -773,6 +787,7 @@ public class BETA_SETTINGS{
     public void Die()
     {
         dead = true;
+        print("You are dead");
     }
 
     public void Drink(float decreaseRate)
@@ -828,6 +843,17 @@ public class BETA_SETTINGS{
             Tree tree = target.GetComponent<Tree>();
             tree.health -= damage;
         }
+    }
+
+    public void ShowStats()
+    {
+        statsInfoUI.text = "Health: " + health + "\nHunger: " +  hunger + "\nThirst: " + thirst;
+    }
+
+    public void ShowInfo(string item, bool isHovering)
+    {
+        info.GetComponent<Text>().enabled = isHovering;
+        info.text = "Press [F] to pick up " + item;
     }
 
     #endregion
@@ -924,8 +950,23 @@ public class BETA_SETTINGS{
             GUILayout.Label("version: "+ versionNum,new GUIStyle(GUI.skin.label){alignment = TextAnchor.MiddleCenter});
             EditorGUILayout.Space();
 
+        #region Dynamic Settings
+        EditorGUILayout.LabelField("", GUI.skin.horizontalSlider);
+        GUILayout.Label("Dynamic Settings", new GUIStyle(GUI.skin.label) { alignment = TextAnchor.MiddleCenter, fontStyle = FontStyle.Bold, fontSize = 13 }, GUILayout.ExpandWidth(true));
+
+            t.maxHealth = EditorGUILayout.Slider(new GUIContent("Max Health", "Determines how much max health the player has. if left 0, player dies."), t.maxHealth, 0, 100);
+            t.maxHunger = EditorGUILayout.Slider(new GUIContent("Max Hunger", "Determines how hungry the player can get. if ----"), t.maxHunger, 0, 200);
+            t.hungerIncreaseRate = EditorGUILayout.Slider(new GUIContent("Hunger Increase Rate", "Determines by how much the player's hunger rate is increasing. if ----"), t.hungerIncreaseRate, 0, 5);
+            t.maxThirst = EditorGUILayout.Slider(new GUIContent("Max Thirst", "Determines how thirsty the player can get. if ----"), t.maxThirst, 0, 150);
+            t.thirstIncreaseRate = EditorGUILayout.Slider(new GUIContent("Thirst Increase Rate", "Determines by how much the player's thirst rate is increasing. if left 0, stamina will not be used."), t.thirstIncreaseRate, 0, 5);
+            t.damage = EditorGUILayout.Slider(new GUIContent("Damage", "Damage done by the player."), t.damage, 0, 100);
+            t.statsInfoUI = (Text)EditorGUILayout.ObjectField(new GUIContent("Stats UI"), t.statsInfoUI, typeof(Text), true);
+            t.info = (Text)EditorGUILayout.ObjectField(new GUIContent("Info UI"), t.info, typeof(Text), true);
+            EditorGUILayout.Space();
+        #endregion
+
         #region Camera Setup
-            EditorGUILayout.LabelField("",GUI.skin.horizontalSlider);
+        EditorGUILayout.LabelField("",GUI.skin.horizontalSlider);
             GUILayout.Label("Camera Setup",new GUIStyle(GUI.skin.label){alignment = TextAnchor.MiddleCenter,fontStyle = FontStyle.Bold, fontSize = 13},GUILayout.ExpandWidth(true));
             EditorGUILayout.Space();
             EditorGUILayout.Space();
@@ -947,9 +988,9 @@ public class BETA_SETTINGS{
             GUI.enabled = true;
             EditorGUILayout.Space();
         #endregion
-        
+
         #region Movement Setup
-            EditorGUILayout.LabelField("",GUI.skin.horizontalSlider);
+        EditorGUILayout.LabelField("",GUI.skin.horizontalSlider);
             GUILayout.Label("Movement Setup",new GUIStyle(GUI.skin.label){alignment = TextAnchor.MiddleCenter,fontStyle = FontStyle.Bold, fontSize = 13},GUILayout.ExpandWidth(true));
             EditorGUILayout.Space();
             EditorGUILayout.Space();
@@ -1008,21 +1049,7 @@ public class BETA_SETTINGS{
             EditorGUILayout.EndFoldoutHeaderGroup();
             GUI.enabled = true;
             EditorGUILayout.Space();
-            showCustom = EditorGUILayout.BeginFoldoutHeaderGroup(showCustom,new GUIContent("Custom", "Custom Settings"));
-            if(showCustom){
-                t.maxHealth = EditorGUILayout.Slider(new GUIContent("Max Health","Determines how much max health the player has. if left 0, player dies."),t.maxHealth,0,100);
-                t.maxHunger = EditorGUILayout.Slider(new GUIContent("Max Hunger","Determines how hungry the player can get. if ----"),t.maxHunger,0,200);
-                t.hungerIncreaseRate = EditorGUILayout.Slider(new GUIContent("Hunger Increase Rate", "Determines by how much the player's hunger rate is increasing. if ----"), t.hungerIncreaseRate, 0, 5);
-                t.maxThirst = EditorGUILayout.Slider(new GUIContent("Max Thirst", "Determines how thirsty the player can get. if ----"),t.maxThirst,0,150);
-                t.thirstIncreaseRate = EditorGUILayout.Slider(new GUIContent("Thirst Increase Rate", "Determines by how much the player's thirst rate is increasing. if left 0, stamina will not be used."),t.thirstIncreaseRate,0,5);
-                t.damage = EditorGUILayout.Slider(new GUIContent("Damage", "Damage done by the player."),t.damage,0,100);
-                GUI.enabled = t.playerCanMove; EditorGUI.indentLevel --;
 
-            EditorGUILayout.Space();
-            }
-            EditorGUILayout.EndFoldoutHeaderGroup();
-            GUI.enabled = true;
-            EditorGUILayout.Space();
         #endregion
 
         #region Headbobbing Setup

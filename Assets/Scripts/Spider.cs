@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
-public class Animal : MonoBehaviour
+public class Spider : MonoBehaviour
 {
     private GameObject player;
 
@@ -22,24 +22,20 @@ public class Animal : MonoBehaviour
     private NavMeshAgent agent;
     private float currentTimer;
 
-    private bool idle;
-    public float idleTimer;
-    private float currentIdleTimer;
-
-    private Animation anim;
     private Animator animator;
 
     public float walkingSpeed;
     public float runningSpeed;
 
-    private float damageGiven = 35f;
+    public float damageGiven;
     private float playerHealth;
+
 
     void OnEnable()
     {
         player = GameObject.FindWithTag("Player");
+
         currentTimer = timer;
-        currentIdleTimer = idleTimer;
     }
 
     void Start()
@@ -53,41 +49,40 @@ public class Animal : MonoBehaviour
 
     void Update()
     {
+        //playerHealth = FirstPersonAIO.health;
         currentTimer += Time.deltaTime;
-        currentIdleTimer += Time.deltaTime;
 
         float distance = Vector3.Distance(target.position, transform.position);
 
         if(distance <= lookRadius)
         {
             agent.SetDestination(target.position);
-            animator.SetBool("IsRunning", true);
-            animator.SetBool("IsWalking", false);
             agent.speed = runningSpeed;
 
             if(distance <= interactionRadius)
             {
                 FaceTarget();
-                animator.SetTrigger("IsHitting");
+                animator.SetBool("IsHitting", true);
                 FirstPersonAIO.health -= damageGiven;
+            }
+            else
+            {
+                animator.SetBool("IsHitting", false);
             }
         }
         else
         {
-            animator.SetBool("IsRunning", false);
-            animator.SetBool("IsWalking", true);
             agent.speed = walkingSpeed;
         }
 
-
-        if(currentTimer >= timer/* && !idle*/)
+        if(currentTimer >= timer)
         {
             Vector3 newPosition = RandomNavSphere(transform.position, radius, -1);
             agent.SetDestination(newPosition);
             currentTimer = 0;
         }
 
-        if (health <= 0)
+        if(health <= 0)
         {
             Die();
         }
@@ -110,21 +105,6 @@ public class Animal : MonoBehaviour
 
     }
 
-    //IEnumerator switchIdle()
-    //{
-    //    idle = true;
-    //    yield return new WaitForSeconds(3);
-    //    currentIdleTimer = 0;
-    //    idle = false;
-    //}
-    //IEnumerator hitting()
-    //{
-    //    playerHealth -= damageGiven;
-    //    //anim.CrossFade("hit");
-    //    animator.SetTrigger("IsHitting");
-    //    yield return new WaitForSeconds(2);
-    //}
-
     public void DropItems()
     {
         for(int i = 0; i < amountOfItems; i++)
@@ -136,6 +116,7 @@ public class Animal : MonoBehaviour
 
     public void Die()
     {
+        animator.SetTrigger("IsDead");
         DropItems();
         Destroy(this.gameObject);
     }

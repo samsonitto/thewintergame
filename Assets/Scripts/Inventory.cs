@@ -7,13 +7,20 @@ public class Inventory : MonoBehaviour
     public GameObject inventory;
     public GameObject slotHolder;
     public GameObject itemManager;
-    private bool inventoryEnabled;
+    
+    public bool inventoryEnabled;
 
     private int slots;
     private Transform[] slot;
 
     private GameObject itemPickedUp;
     private bool itemAdded;
+    private Camera fpsCam;
+    private int itemLayerMask;
+    private GameObject player;
+
+    private RaycastHit hit;
+
     public void Start()
     {
         // slots being detected
@@ -21,45 +28,90 @@ public class Inventory : MonoBehaviour
         slot = new Transform[slots];
         DetectInventorySlots();
         Cursor.visible = false;
+
+        fpsCam = Camera.main;
+        itemLayerMask = LayerMask.GetMask("Item");
+        player = GameObject.FindWithTag("Player");
+        
     }
 
     public void Update()
     {
+
+
         if (Input.GetKeyDown(KeyCode.Tab))
         {
             inventoryEnabled = !inventoryEnabled;
-            Cursor.visible = !Cursor.visible;
+            //Cursor.visible = !Cursor.visible;
+            player.GetComponent<FirstPersonAIO>().lockAndHideCursor = !player.GetComponent<FirstPersonAIO>().lockAndHideCursor;
+            player.GetComponent<FirstPersonAIO>().enableCameraMovement = !player.GetComponent<FirstPersonAIO>().enableCameraMovement;
+            
         }
 
         if (inventoryEnabled)
             inventory.GetComponent<Canvas>().enabled = true;
         else
             inventory.GetComponent<Canvas>().enabled = false;
+
+
+
+        PickUp();
+        
     }
 
-    public void OnTriggerEnter(Collider other)
+    //public void OnTriggerEnter(Collider other)
+    //{
+    //    if (other.tag == "Item")
+    //    {
+    //        print("Colliding!");
+    //        itemPickedUp = other.gameObject;
+    //        AddItem(itemPickedUp);
+    //    }
+    //}
+
+    public void PickUp()
     {
-        if (other.tag == "Item")
+        if (Physics.Raycast(fpsCam.transform.position, fpsCam.transform.forward, out hit, 3f, itemLayerMask))
         {
-            print("Colliding!");
-            itemPickedUp = other.gameObject;
-            AddItem(itemPickedUp);
+            
+            if (!hit.transform.IsChildOf(player.transform))
+            {
+                GetComponent<FirstPersonAIO>().ShowInfo(hit.transform.gameObject.name, true);
+            }
+            
+
+            if (Input.GetKeyDown(KeyCode.F))
+            {
+                print("F");
+                GameObject item = hit.transform.gameObject.gameObject;
+                itemPickedUp = item;
+                //Debug.Log(item);
+                AddItem(item);
+            }
         }
+        else
+        {
+            GetComponent<FirstPersonAIO>().ShowInfo("nothing", false);
+        }
+        
     }
 
-    public void OnTriggerExit(Collider other)
-    {
-        if (other.tag == "Item")
-            itemAdded = false;
-    }
+    //public void OnTriggerExit(Collider other)
+    //{
+    //    if (other.tag == "Item")
+    //        itemAdded = false;
+    //}
 
     public void AddItem(GameObject item)
     {
+        print("add");
         for(int i = 0; i < slots; i++)
         {
+            print("add" + i);
             if (slot[i].GetComponent<Slot>().empty && itemAdded == false)
             {
                 slot[i].GetComponent<Slot>().item = itemPickedUp;
+                Debug.Log(itemPickedUp);
                 slot[i].GetComponent<Slot>().itemIcon = itemPickedUp.GetComponent<Item>().icon;
 
                 item.transform.parent = itemManager.transform;
@@ -72,9 +124,11 @@ public class Inventory : MonoBehaviour
                 item.GetComponent<Item>().pickedUp = true; //ehkä joutuu poistaa
                 Destroy(item.GetComponent<Rigidbody>());
                 itemAdded = true;
+                print("done");
                 item.SetActive(false);
             }
         }
+        itemAdded = false;
     }
 
     public void DetectInventorySlots()
@@ -83,7 +137,6 @@ public class Inventory : MonoBehaviour
         for(int i = 0; i < slots; i++)
         {
             slot[i] = slotHolder.transform.GetChild(i);
-            print(slot[i].name);
         }
     }
 }

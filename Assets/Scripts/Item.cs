@@ -5,6 +5,7 @@ using UnityEngine;
 public class Item : MonoBehaviour
 {
     private GameObject player;
+    private GameObject thisItem;
     public Texture icon;
 
     public string type;
@@ -17,15 +18,23 @@ public class Item : MonoBehaviour
     public bool pickedUp;
     public bool equipped;
     public bool flashlightEquipped;
-    
+
+    private float pickupRadius = 2f;
+    private Camera fpsCam;
+    private int itemLayerMask;
+
     void Start()
     {
+        itemLayerMask = LayerMask.GetMask("Item");
         player = GameObject.FindWithTag("Player");
+        fpsCam = Camera.main;
     }
 
     // Update is called once per frame
     void Update()
     {
+        float distance = Vector3.Distance(player.transform.position, transform.position);
+
         if (equipped)
         {
             if (Input.GetKeyDown(KeyCode.E))
@@ -37,6 +46,12 @@ public class Item : MonoBehaviour
             if (Input.GetKeyDown(KeyCode.T))
                 UnequipFlashlight();
         }
+    }
+
+    void OnDrawGizmosSelected()
+    {
+        Gizmos.color = Color.red;
+        Gizmos.DrawWireSphere(transform.position, pickupRadius);
 
     }
 
@@ -45,6 +60,12 @@ public class Item : MonoBehaviour
         player.GetComponent<FirstPersonAIO>().weaponEquipped = false;
         equipped = false;
         this.gameObject.SetActive(false);
+    }
+    public void Equip()
+    {
+        player.GetComponent<FirstPersonAIO>().weaponEquipped = true;
+        equipped = true;
+        this.gameObject.SetActive(true);
     }
     public void UnequipFlashlight()
     {

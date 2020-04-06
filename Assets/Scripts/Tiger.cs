@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
-public class Animal : MonoBehaviour
+public class Tiger : MonoBehaviour
 {
     private GameObject player;
 
@@ -32,14 +32,17 @@ public class Animal : MonoBehaviour
     public float walkingSpeed;
     public float runningSpeed;
 
-    private float damageGiven = 35f;
-    private float playerHealth;
 
     void OnEnable()
     {
         player = GameObject.FindWithTag("Player");
+
+        //agent = GetComponent<NavMeshAgent>();
+        anim = GetComponent<Animation>();
         currentTimer = timer;
         currentIdleTimer = idleTimer;
+
+        print(anim);
     }
 
     void Start()
@@ -47,8 +50,9 @@ public class Animal : MonoBehaviour
         target = PlayerManager.instance.player.transform;
 
         agent = GetComponent<NavMeshAgent>();
+        walkingSpeed = agent.speed;
+        runningSpeed = walkingSpeed * 3;
         animator = GetComponent<Animator>();
-        animator.SetBool("IsWalking", true);
     }
 
     void Update()
@@ -58,40 +62,56 @@ public class Animal : MonoBehaviour
 
         float distance = Vector3.Distance(target.position, transform.position);
 
-        if(distance <= lookRadius)
+        if (distance <= lookRadius)
         {
             agent.SetDestination(target.position);
+            //anim.CrossFade("run");
             animator.SetBool("IsRunning", true);
-            animator.SetBool("IsWalking", false);
             agent.speed = runningSpeed;
 
-            if(distance <= interactionRadius)
+            if (distance <= agent.stoppingDistance)
             {
+                //Attack the target
+
                 FaceTarget();
-                animator.SetTrigger("IsHitting");
-                FirstPersonAIO.health -= damageGiven;
+            }
+
+            if (distance <= interactionRadius)
+            {
+                //anim.CrossFade("hit");
+                animator.SetBool("IsHitting", true);
+                print("hit");
+            }
+            else
+            {
+                animator.SetBool("IsHitting", false);
+                print(animator.GetBool("IsHitting"));
             }
         }
-        else
+
+        if (currentIdleTimer >= idleTimer)
         {
-            animator.SetBool("IsRunning", false);
-            animator.SetBool("IsWalking", true);
-            agent.speed = walkingSpeed;
+            StartCoroutine("switchIdle");
         }
 
-
-        if(currentTimer >= timer/* && !idle*/)
+        if (currentTimer >= timer && !idle)
         {
             Vector3 newPosition = RandomNavSphere(transform.position, radius, -1);
             agent.SetDestination(newPosition);
             currentTimer = 0;
         }
 
+        if (idle)
+            animator.SetBool("IsIdle", true);
+        //anim.CrossFade("idle");
+        else
+            animator.SetBool("IsWalking", true);
+        //anim.CrossFade("walk");
+
         if (health <= 0)
         {
             Die();
         }
-
     }
 
     void FaceTarget()
@@ -110,24 +130,17 @@ public class Animal : MonoBehaviour
 
     }
 
-    //IEnumerator switchIdle()
-    //{
-    //    idle = true;
-    //    yield return new WaitForSeconds(3);
-    //    currentIdleTimer = 0;
-    //    idle = false;
-    //}
-    //IEnumerator hitting()
-    //{
-    //    playerHealth -= damageGiven;
-    //    //anim.CrossFade("hit");
-    //    animator.SetTrigger("IsHitting");
-    //    yield return new WaitForSeconds(2);
-    //}
+    IEnumerator switchIdle()
+    {
+        idle = true;
+        yield return new WaitForSeconds(3);
+        currentIdleTimer = 0;
+        idle = false;
+    }
 
     public void DropItems()
     {
-        for(int i = 0; i < amountOfItems; i++)
+        for (int i = 0; i < amountOfItems; i++)
         {
             GameObject droppedItem = Instantiate(item[i], transform.position, Quaternion.identity);
             break;
