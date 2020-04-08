@@ -53,14 +53,14 @@ public class Slot : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IP
         if (item)
         {
             Item thisItem = item.GetComponent<Item>();
-
+            print(thisItem.type);
             // checking for item type
             if(thisItem.type == "Water")
             {
                 player.GetComponent<FirstPersonAIO>().Drink(thisItem.decreaseRate);
                 Destroy(item);
             }
-            else if (thisItem.type == "Meat")
+            else if (thisItem.type == "meat")
             {
                 player.GetComponent<FirstPersonAIO>().Eat(thisItem.decreaseRate);
                 Destroy(item);
@@ -71,7 +71,7 @@ public class Slot : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IP
                 player.GetComponent<FirstPersonAIO>().Drink(thisItem.decreaseRate * 0.5f);
                 Destroy(item);
             }
-            else if (thisItem.type == "Weapon" && !player.GetComponent<FirstPersonAIO>().weaponEquipped)
+            else if ((thisItem.type == "Weapon" || thisItem.type == "Melee") && !player.GetComponent<FirstPersonAIO>().weaponEquipped)
             {
                 thisItem.equipped = true;
                 item.SetActive(true);

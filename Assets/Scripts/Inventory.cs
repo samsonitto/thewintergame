@@ -1,12 +1,14 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Inventory : MonoBehaviour
 {
     public GameObject inventory;
     public GameObject slotHolder;
     public GameObject itemManager;
+    public Text itemInfo;
     
     public bool inventoryEnabled;
 
@@ -42,10 +44,21 @@ public class Inventory : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Tab))
         {
             inventoryEnabled = !inventoryEnabled;
-            //Cursor.visible = !Cursor.visible;
-            player.GetComponent<FirstPersonAIO>().lockAndHideCursor = !player.GetComponent<FirstPersonAIO>().lockAndHideCursor;
-            player.GetComponent<FirstPersonAIO>().enableCameraMovement = !player.GetComponent<FirstPersonAIO>().enableCameraMovement;
             
+            
+        }
+
+        if (inventoryEnabled)
+        {
+            Cursor.visible = true;
+            player.GetComponent<FirstPersonAIO>().lockAndHideCursor = false;
+            player.GetComponent<FirstPersonAIO>().enableCameraMovement = false;
+        }
+        else
+        {
+            Cursor.visible = false;
+            player.GetComponent<FirstPersonAIO>().lockAndHideCursor = true;
+            player.GetComponent<FirstPersonAIO>().enableCameraMovement = true;
         }
 
         if (inventoryEnabled)
@@ -58,16 +71,6 @@ public class Inventory : MonoBehaviour
         PickUp();
         
     }
-
-    //public void OnTriggerEnter(Collider other)
-    //{
-    //    if (other.tag == "Item")
-    //    {
-    //        print("Colliding!");
-    //        itemPickedUp = other.gameObject;
-    //        AddItem(itemPickedUp);
-    //    }
-    //}
 
     public void PickUp()
     {
@@ -82,10 +85,8 @@ public class Inventory : MonoBehaviour
 
             if (Input.GetKeyDown(KeyCode.F))
             {
-                print("F");
                 GameObject item = hit.transform.gameObject.gameObject;
                 itemPickedUp = item;
-                //Debug.Log(item);
                 AddItem(item);
             }
         }
@@ -96,22 +97,13 @@ public class Inventory : MonoBehaviour
         
     }
 
-    //public void OnTriggerExit(Collider other)
-    //{
-    //    if (other.tag == "Item")
-    //        itemAdded = false;
-    //}
-
     public void AddItem(GameObject item)
     {
-        print("add");
         for(int i = 0; i < slots; i++)
         {
-            print("add" + i);
             if (slot[i].GetComponent<Slot>().empty && itemAdded == false)
             {
                 slot[i].GetComponent<Slot>().item = itemPickedUp;
-                Debug.Log(itemPickedUp);
                 slot[i].GetComponent<Slot>().itemIcon = itemPickedUp.GetComponent<Item>().icon;
 
                 item.transform.parent = itemManager.transform;
@@ -124,7 +116,6 @@ public class Inventory : MonoBehaviour
                 item.GetComponent<Item>().pickedUp = true; //ehkä joutuu poistaa
                 Destroy(item.GetComponent<Rigidbody>());
                 itemAdded = true;
-                print("done");
                 item.SetActive(false);
             }
         }

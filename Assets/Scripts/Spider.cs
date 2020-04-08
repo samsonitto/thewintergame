@@ -107,10 +107,9 @@ public class Spider : MonoBehaviour
 
     public void DropItems()
     {
-        for(int i = 0; i < amountOfItems; i++)
+        for(int i = 0; i < item.Length; i++)
         {
             GameObject droppedItem = Instantiate(item[i], transform.position, Quaternion.identity);
-            break;
         }
     }
 

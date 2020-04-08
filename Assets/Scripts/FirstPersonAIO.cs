@@ -787,7 +787,7 @@ public class BETA_SETTINGS{
     public void Die()
     {
         dead = true;
-        print("You are dead");
+        //print("You are dead");
     }
 
     public void Drink(float decreaseRate)

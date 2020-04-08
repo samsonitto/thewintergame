@@ -32,7 +32,7 @@ public class Animal : MonoBehaviour
     public float walkingSpeed;
     public float runningSpeed;
 
-    private float damageGiven = 35f;
+    public float damageGiven;
     private float playerHealth;
 
     void OnEnable()
@@ -69,6 +69,8 @@ public class Animal : MonoBehaviour
             {
                 FaceTarget();
                 animator.SetTrigger("IsHitting");
+                animator.SetBool("IsRunning", false);
+                agent.speed = 0f;
                 FirstPersonAIO.health -= damageGiven;
             }
         }
@@ -127,10 +129,9 @@ public class Animal : MonoBehaviour
 
     public void DropItems()
     {
-        for(int i = 0; i < amountOfItems; i++)
+        for(int i = 0; i < item.Length; i++)
         {
             GameObject droppedItem = Instantiate(item[i], transform.position, Quaternion.identity);
-            break;
         }
     }
 

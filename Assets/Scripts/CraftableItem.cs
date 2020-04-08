@@ -15,11 +15,16 @@ public class CraftableItem : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
     private bool hovered;
     private GameObject player;
     private GameObject itemManager;
+    private GameObject craftingManager;
+    private GameObject[] itemsUsedForCrafting;
+    private Text inventoryInfo;
 
     public void Start()
     {
         player = GameObject.FindWithTag("Player");
         itemManager = GameObject.FindWithTag("ItemManager");
+        craftingManager = GameObject.FindWithTag("CraftingManager");
+        inventoryInfo = player.GetComponent<Inventory>().itemInfo;
     }
 
     public void Update()
@@ -30,6 +35,22 @@ public class CraftableItem : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
             {
                 CheckForRequiredItems();
             }
+
+            string items = "";
+
+            for(int i = 0; i< item.Length; i++)
+            {
+                if(i == item.Length-1)
+                    items += (item[i].transform.name + ".");
+                else
+                    items += (item[i].transform.name + ", ");
+            }
+
+            inventoryInfo.text = "To craft " + thisItem.transform.name + " you need these items: " + items;
+        }
+        else
+        {
+            inventoryInfo.text = "";
         }
     }
 
@@ -41,27 +62,49 @@ public class CraftableItem : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
         {
             int itemsFound = 0;
 
+            itemsUsedForCrafting = new GameObject[requiredItems];
+
             for(int i = 0; i < itemsInManager; i++)
             {
                 for(int j = 0; j < requiredItems; j++)
                 {
                     if (itemManager.transform.GetChild(i).GetComponent<Item>().type == item[j].GetComponent<Item>().type)
                     {
+                        itemsUsedForCrafting[itemsFound] = itemManager.transform.GetChild(i).gameObject;
                         itemsFound++;
                         break;
                     }
                 }
+
+                if (itemsFound == requiredItems)
+                    break;
             }
 
             if (itemsFound >= requiredItems)
             {
-                Vector3 pos = new Vector3(player.transform.position.x, player.transform.position.y, player.transform.position.z);
-                GameObject spawnedItem = Instantiate(thisItem, pos, Quaternion.identity);
-                player.GetComponent<Inventory>().AddItem(spawnedItem);
+                Vector3 playerPos = player.transform.position;
+                Vector3 playerDirection = player.transform.forward;
+                Quaternion playerRotation = player.transform.rotation;
+                float spawnDistance = 3;
+
+                Vector3 spawnPos = playerPos + playerDirection * spawnDistance;
+
+                Instantiate(thisItem, spawnPos, playerRotation);
+
+                for (int i = 0; i < requiredItems; i++)
+                {
+                    Destroy(itemsUsedForCrafting[i]);
+                }
             }
 
         }
     }
+
+    public void ShowInfo()
+    {
+
+    }
+
     public void OnPointerEnter(PointerEventData eventData)
     {
         hovered = true;
@@ -70,4 +113,6 @@ public class CraftableItem : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
     {
         hovered = false;
     }
+
+
 }
