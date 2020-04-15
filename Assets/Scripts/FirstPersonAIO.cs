@@ -360,6 +360,7 @@ public class BETA_SETTINGS{
 
         #region Dynamic Settings
         info.GetComponent<Text>().enabled = false;
+        StartCoroutine(addHealth());
         #endregion
     }
 
@@ -784,6 +785,23 @@ public class BETA_SETTINGS{
     #endregion
 
     #region My Functions
+
+    IEnumerator addHealth()
+    {
+        while (true)
+        { // loops forever...
+            if (health < maxHealth && hunger < maxHunger * 0.5f && thirst < maxThirst * 0.5)
+            { // if health < 100...
+                health += maxHealth * 0.01f; // increase health and wait the specified time
+                yield return new WaitForSeconds(1);
+            }
+            else
+            { // if health >= 100, just yield 
+                yield return null;
+            }
+        }
+    }
+
     public void Die()
     {
         dead = true;

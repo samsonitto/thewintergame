@@ -16,3 +16,10 @@ Date | Duration | Task
 --- | --- | ---
 30.03.2020 | 8h | Terrain, First person controller
 03.04.2020 | 10h | Gun, airplane, hunger, thirst, health, tiger, flashlight
+04.04.2020 | 8h | Inventory
+05.04.2020 | 8h | Shooting, Inventory
+06.04.2020 | 8h | Animal AI, info UI, stats UI, picking up items
+07.04.2020 | 8h | Uudet eläimet, AI, Inventory, Crafting
+08.04.2020 | 1h | Inventory Info
+Total | 51h | |
+

@@ -8,6 +8,7 @@ public class Animal : MonoBehaviour
     private GameObject player;
 
     public float health;
+    public float maxHealth;
     private bool dead;
 
     public int amountOfItems;
@@ -35,15 +36,18 @@ public class Animal : MonoBehaviour
     public float damageGiven;
     private float playerHealth;
 
+
     void OnEnable()
     {
         player = GameObject.FindWithTag("Player");
         currentTimer = timer;
         currentIdleTimer = idleTimer;
+        maxHealth = health;
     }
 
     void Start()
     {
+        StartCoroutine(addHealth());
         target = PlayerManager.instance.player.transform;
 
         agent = GetComponent<NavMeshAgent>();
@@ -57,6 +61,8 @@ public class Animal : MonoBehaviour
         currentIdleTimer += Time.deltaTime;
 
         float distance = Vector3.Distance(target.position, transform.position);
+
+        //CheckTerrainAngle();
 
         if(distance <= lookRadius)
         {
@@ -89,12 +95,38 @@ public class Animal : MonoBehaviour
             currentTimer = 0;
         }
 
+        if(health <= maxHealth * 0.3)
+        {
+            agent.SetDestination(target.position * -1);
+            animator.SetBool("IsRunning", true);
+            animator.SetBool("IsWalking", false);
+            agent.speed = runningSpeed;
+        }
+
         if (health <= 0)
         {
             Die();
         }
 
     }
+
+    IEnumerator addHealth()
+    {
+        while (true)
+        { // loops forever...
+            if (health < maxHealth)
+            { // if health < 100...
+                health += maxHealth * 0.01f; // increase health and wait the specified time
+                yield return new WaitForSeconds(1);
+            }
+            else
+            { // if health >= 100, just yield 
+                yield return null;
+            }
+        }
+    }
+
+    
 
     void FaceTarget()
     {

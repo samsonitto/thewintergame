@@ -12,7 +12,7 @@ public class CraftableItem : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
     public int requiredItems;
     public GameObject[] item;
 
-    private bool hovered;
+    public bool hovered;
     private GameObject player;
     private GameObject itemManager;
     private GameObject craftingManager;
@@ -31,6 +31,7 @@ public class CraftableItem : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
     {
         if (hovered)
         {
+            print("step0");
             if (Input.GetMouseButtonDown(0))
             {
                 CheckForRequiredItems();
@@ -40,17 +41,26 @@ public class CraftableItem : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
 
             for(int i = 0; i< item.Length; i++)
             {
-                if(i == item.Length-1)
+                if(i == item.Length - 1)
+                {
                     items += (item[i].transform.name + ".");
-                else
-                    items += (item[i].transform.name + ", ");
-            }
+                    print("step" + i);
+                }
 
+                else
+                {
+                    items += (item[i].transform.name + ", ");
+                    print("step" + i);
+                }
+                    
+            }
+            print("items: " + items);
+            print(inventoryInfo.text);
             inventoryInfo.text = "To craft " + thisItem.transform.name + " you need these items: " + items;
         }
         else
         {
-            inventoryInfo.text = "";
+            //inventoryInfo.text = "";
         }
     }
 
