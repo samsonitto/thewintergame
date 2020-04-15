@@ -28,7 +28,7 @@ public class PositionModifier : MonoBehaviour
     {
         Ray ray = new Ray(transform.position, -transform.up);
         RaycastHit hit;
-        if (Physics.Raycast(ray, out hit, 1.5f, layerMask) == true)
+        if (Physics.Raycast(ray, out hit, 1.5f, layerMask))
         {
             print("step1");
             print(hit.transform.name);
@@ -45,18 +45,18 @@ public class PositionModifier : MonoBehaviour
         }
 
 
-        if (grounded == true)
+        if (grounded)
         {
             transform.position = Vector3.Lerp(transform.position, posCur, Time.deltaTime * 5);
             transform.rotation = Quaternion.Lerp(transform.rotation, rotCur, Time.deltaTime * 5);
         }
-        else
-        {
-            transform.position = Vector3.Lerp(transform.position, transform.position - Vector3.up * 1f, Time.deltaTime * 5);
+        //else
+        //{
+        //    transform.position = Vector3.Lerp(transform.position, transform.position - Vector3.up * 1f, Time.deltaTime * 5);
 
-            rotCur.eulerAngles = Vector3.zero;
-            transform.rotation = Quaternion.Lerp(transform.rotation, rotCur, Time.deltaTime);
+        //    rotCur.eulerAngles = Vector3.zero;
+        //    transform.rotation = Quaternion.Lerp(transform.rotation, rotCur, Time.deltaTime);
 
-        }
+        //}
     }
 }
