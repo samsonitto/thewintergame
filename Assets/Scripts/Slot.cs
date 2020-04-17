@@ -82,6 +82,20 @@ public class Slot : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IP
                 thisItem.flashlightEquipped = true;
                 item.SetActive(true);
             }
+            else if (thisItem.type == "Campfire")
+            {
+                Vector3 playerPos = new Vector3(player.transform.position.x, player.transform.position.y + 2);
+                Vector3 playerDirection = player.transform.forward;
+                Quaternion playerRotation = player.transform.rotation;
+                float spawnDistance = 3;
+
+                Vector3 spawnPos = playerPos + playerDirection * spawnDistance;
+                thisItem.pickedUp = false;
+                thisItem.gameObject.SetActive(true);
+                
+                Instantiate(thisItem.gameObject, spawnPos, playerRotation);
+                Destroy(item);
+            }
         }
     }
 

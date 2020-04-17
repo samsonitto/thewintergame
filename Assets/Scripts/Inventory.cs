@@ -22,6 +22,7 @@ public class Inventory : MonoBehaviour
     private GameObject player;
 
     private RaycastHit hit;
+    private bool isLit;
 
     public void Start()
     {
@@ -79,7 +80,7 @@ public class Inventory : MonoBehaviour
             
             if (!hit.transform.IsChildOf(player.transform))
             {
-                GetComponent<FirstPersonAIO>().ShowInfo(hit.transform.gameObject.name, true);
+                GetComponent<FirstPersonAIO>().ShowInfo(hit.transform.gameObject, true);
             }
             
 
@@ -87,12 +88,23 @@ public class Inventory : MonoBehaviour
             {
                 GameObject item = hit.transform.gameObject.gameObject;
                 itemPickedUp = item;
+
+                if(item.GetComponent<Item>().type == "Campfire" && isLit)
+                    item.GetComponentInChildren<Campfire>().TurnOnOff(isLit);
+
                 AddItem(item);
+            }            
+
+            if (Input.GetKeyDown(KeyCode.G))
+            {
+                isLit = !isLit;
+                GameObject item = hit.transform.gameObject.gameObject;
+                item.GetComponentInChildren<Campfire>().TurnOnOff(isLit);
             }
         }
         else
         {
-            GetComponent<FirstPersonAIO>().ShowInfo("nothing", false);
+            //GetComponent<FirstPersonAIO>().ShowInfo("nothing", false);
         }
         
     }
@@ -114,7 +126,7 @@ public class Inventory : MonoBehaviour
                 item.transform.localScale = item.GetComponent<Item>().scale;
 
                 item.GetComponent<Item>().pickedUp = true; //ehkä joutuu poistaa
-                Destroy(item.GetComponent<Rigidbody>());
+                //Destroy(item.GetComponent<Rigidbody>());
                 itemAdded = true;
                 item.SetActive(false);
             }

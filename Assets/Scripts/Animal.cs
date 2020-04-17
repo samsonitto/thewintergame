@@ -222,6 +222,8 @@ public class Animal : MonoBehaviour
 
     IEnumerator Die()
     {
+        agent.speed = 0f;
+        //Run(false);
         Dead();
         yield return new WaitForSeconds(deathTime);
         DropItems();

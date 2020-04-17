@@ -868,10 +868,20 @@ public class BETA_SETTINGS{
         statsInfoUI.text = "Health: " + health + "\nHunger: " +  hunger + "\nThirst: " + thirst;
     }
 
-    public void ShowInfo(string item, bool isHovering)
+    public void ShowInfo(GameObject item, bool isHovering)
     {
         info.GetComponent<Text>().enabled = isHovering;
-        info.text = "Press [F] to pick up " + item;
+
+        if (item.GetComponent<Item>().type == "Campfire")
+        {
+            info.text = "Press [F] to pick up, press [G] to turn on/off";
+        }
+        else
+        {
+            info.text = "Press [F] to pick up " + item.name;
+        }
+        
+        
     }
 
     #endregion
