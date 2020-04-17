@@ -35,7 +35,10 @@ public class Animal : MonoBehaviour
 
     public float damageGiven;
     private float playerHealth;
-
+    public float timeBetweenAttacks;
+    private float attackTimer;
+    public bool playerInRange;
+    public float deathTime;
 
     void OnEnable()
     {
@@ -52,11 +55,12 @@ public class Animal : MonoBehaviour
 
         agent = GetComponent<NavMeshAgent>();
         animator = GetComponent<Animator>();
-        animator.SetBool("IsWalking", true);
+        Walk(true);
     }
 
     void Update()
     {
+        attackTimer += Time.deltaTime;
         currentTimer += Time.deltaTime;
         currentIdleTimer += Time.deltaTime;
 
@@ -67,23 +71,32 @@ public class Animal : MonoBehaviour
         if(distance <= lookRadius)
         {
             agent.SetDestination(target.position);
-            animator.SetBool("IsRunning", true);
-            animator.SetBool("IsWalking", false);
+            Run(true);
+            Walk(false);
             agent.speed = runningSpeed;
 
-            if(distance <= interactionRadius)
+            //if(distance <= interactionRadius)
+            //{
+            //    FaceTarget();
+            //    Run(false);
+            //    animator.SetBool("IsIdle", true);
+            //    Attack();
+                
+            //    agent.speed = 0f;
+            //}
+
+            if(attackTimer >= timeBetweenAttacks && playerInRange)
             {
-                FaceTarget();
-                animator.SetTrigger("IsHitting");
-                animator.SetBool("IsRunning", false);
-                agent.speed = 0f;
-                FirstPersonAIO.health -= damageGiven;
+
+                Attack();
+                
+                
             }
         }
         else
         {
-            animator.SetBool("IsRunning", false);
-            animator.SetBool("IsWalking", true);
+            Run(false);
+            Walk(true);
             agent.speed = walkingSpeed;
         }
 
@@ -98,14 +111,14 @@ public class Animal : MonoBehaviour
         if(health <= maxHealth * 0.3)
         {
             agent.SetDestination(target.position * -1);
-            animator.SetBool("IsRunning", true);
-            animator.SetBool("IsWalking", false);
+            Run(true);
+            Walk(false);
             agent.speed = runningSpeed;
         }
 
         if (health <= 0)
         {
-            Die();
+            StartCoroutine(Die());
         }
 
     }
@@ -126,7 +139,31 @@ public class Animal : MonoBehaviour
         }
     }
 
-    
+    public void Walk(bool walk)
+    {
+        animator.SetBool("IsWalking", walk);
+    }
+    public void Run(bool walk)
+    {
+        animator.SetBool("IsRunning", walk);
+    }
+
+    public void Attack()
+    {
+        attackTimer = 0f;
+
+        FaceTarget();
+        Run(false);
+        animator.SetBool("IsIdle", true);
+        agent.speed = 0f;
+        animator.SetTrigger("IsHitting");
+        FirstPersonAIO.health -= damageGiven;
+    }
+
+    public void Dead()
+    {
+        animator.SetTrigger("Dead");
+    }
 
     void FaceTarget()
     {
@@ -142,6 +179,22 @@ public class Animal : MonoBehaviour
         Gizmos.color = Color.yellow;
         Gizmos.DrawWireSphere(transform.position, interactionRadius);
 
+    }
+
+    public void OnTriggerEnter(Collider other)
+    {
+        if(other.gameObject == player)
+        {
+            playerInRange = true;
+        }
+    }
+
+    public void OnTriggerExit(Collider other)
+    {
+        if(other.gameObject == player)
+        {
+            playerInRange = false;
+        }
     }
 
     //IEnumerator switchIdle()
@@ -167,8 +220,10 @@ public class Animal : MonoBehaviour
         }
     }
 
-    public void Die()
+    IEnumerator Die()
     {
+        Dead();
+        yield return new WaitForSeconds(deathTime);
         DropItems();
         Destroy(this.gameObject);
     }

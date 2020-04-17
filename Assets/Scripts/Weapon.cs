@@ -38,10 +38,8 @@ public class Weapon : MonoBehaviour
 
         if(Input.GetButtonDown("Fire1") && GetComponent<Item>().equipped)
         {
-            print("step0");
             if (!player.GetComponent<Inventory>().inventoryEnabled)
             {
-                print("step1");
                 Shoot();
             }
                 
@@ -58,7 +56,6 @@ public class Weapon : MonoBehaviour
         RaycastHit hit;
         if(Physics.Raycast(fpsCam.transform.position, fpsCam.transform.forward, out hit, range, layerMask))
         {
-            print("step2");
             Debug.DrawRay(fpsCam.transform.position, fpsCam.transform.forward * range, Color.red, 1f);
             Debug.Log(hit.transform.name);
             Animal animal = hit.transform.GetComponent<Animal>();
@@ -66,12 +63,10 @@ public class Weapon : MonoBehaviour
 
             if (animal != null)
             {
-                print("step animal");
                 animal.health -= damage;
             }
             else if (spider != null)
             {
-                print("step spider");
                 spider.health -= damage;
             }
 
@@ -83,8 +78,6 @@ public class Weapon : MonoBehaviour
     void EquipWeapon()
     {
         player.GetComponent<FirstPersonAIO>().weaponEquipped = !player.GetComponent<FirstPersonAIO>().weaponEquipped;
-
-        print(player.GetComponent<FirstPersonAIO>().weaponEquipped);
 
         if (thisItem.type == "Weapon" && !player.GetComponent<FirstPersonAIO>().weaponEquipped)
         {

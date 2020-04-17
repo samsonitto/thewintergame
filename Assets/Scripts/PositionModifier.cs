@@ -28,6 +28,7 @@ public class PositionModifier : MonoBehaviour
     {
         Ray ray = new Ray(transform.position, -transform.up);
         RaycastHit hit;
+        float change;
         if (Physics.Raycast(ray, out hit, 1.5f, layerMask))
         {
             print("step1");
@@ -35,6 +36,7 @@ public class PositionModifier : MonoBehaviour
             Debug.DrawLine(transform.position, hit.point, Color.green);
             rotCur = Quaternion.FromToRotation(transform.up, hit.normal) * transform.rotation;
             posCur = new Vector3(transform.position.x, hit.point.y, transform.position.z);
+            //change = hit.distance - 
 
             grounded = true;
 
