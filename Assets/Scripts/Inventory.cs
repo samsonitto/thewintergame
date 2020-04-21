@@ -90,7 +90,11 @@ public class Inventory : MonoBehaviour
                 itemPickedUp = item;
 
                 if(item.GetComponent<Item>().type != "Campfire")
+                {
                     AddItem(item);
+                    player.GetComponent<Objectives>().CheckForObjective(item);
+                }
+                    
             }            
 
             if (Input.GetKeyDown(KeyCode.G))
@@ -103,8 +107,7 @@ public class Inventory : MonoBehaviour
         else
         {
             GetComponent<FirstPersonAIO>().ShowInfo("nothing", false);
-        }
-        
+        }        
     }
 
     public void AddItem(GameObject item)
