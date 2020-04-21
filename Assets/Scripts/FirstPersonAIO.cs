@@ -823,7 +823,7 @@ public class BETA_SETTINGS{
 
     public void OnTriggerStay(Collider other)
     {
-        if(other.tag == "Tree")
+        if (other.tag == "Tree")
         {
             triggeringWithTree = true;
             treeObject = other.gameObject;
@@ -868,17 +868,17 @@ public class BETA_SETTINGS{
         statsInfoUI.text = "Health: " + health + "\nHunger: " +  hunger + "\nThirst: " + thirst;
     }
 
-    public void ShowInfo(GameObject item, bool isHovering)
+    public void ShowInfo(string item, bool isHovering)
     {
         info.GetComponent<Text>().enabled = isHovering;
 
-        if (item.GetComponent<Item>().type == "Campfire")
+        if (item.Split('(')[0] == "Campfire")
         {
-            info.text = "Press [F] to pick up, press [G] to turn on/off";
+            info.text = "Press [G] to turn on/off";
         }
         else
         {
-            info.text = "Press [F] to pick up " + item.name;
+            info.text = "Press [F] to pick up " + item;
         }
         
         

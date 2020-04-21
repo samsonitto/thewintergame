@@ -23,6 +23,8 @@ public class Item : MonoBehaviour
     private Camera fpsCam;
     private int itemLayerMask;
 
+    public string partName;
+
     void Start()
     {
         itemLayerMask = LayerMask.GetMask("Item");

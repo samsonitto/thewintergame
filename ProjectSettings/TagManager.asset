@@ -11,6 +11,7 @@ TagManager:
   - ItemManager
   - Info
   - CraftingManager
+  - Terrain
   layers:
   - Default
   - TransparentFX
@@ -23,8 +24,8 @@ TagManager:
   - Ground
   - Enemy
   - Item
-  - 
-  - 
+  - Minimap
+  - BothCameras
   - 
   - 
   - 

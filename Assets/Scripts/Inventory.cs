@@ -80,7 +80,7 @@ public class Inventory : MonoBehaviour
             
             if (!hit.transform.IsChildOf(player.transform))
             {
-                GetComponent<FirstPersonAIO>().ShowInfo(hit.transform.gameObject, true);
+                GetComponent<FirstPersonAIO>().ShowInfo(hit.transform.gameObject.name, true);
             }
             
 
@@ -89,10 +89,8 @@ public class Inventory : MonoBehaviour
                 GameObject item = hit.transform.gameObject.gameObject;
                 itemPickedUp = item;
 
-                if(item.GetComponent<Item>().type == "Campfire" && isLit)
-                    item.GetComponentInChildren<Campfire>().TurnOnOff(isLit);
-
-                AddItem(item);
+                if(item.GetComponent<Item>().type != "Campfire")
+                    AddItem(item);
             }            
 
             if (Input.GetKeyDown(KeyCode.G))
@@ -104,7 +102,7 @@ public class Inventory : MonoBehaviour
         }
         else
         {
-            //GetComponent<FirstPersonAIO>().ShowInfo("nothing", false);
+            GetComponent<FirstPersonAIO>().ShowInfo("nothing", false);
         }
         
     }
