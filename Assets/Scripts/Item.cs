@@ -24,6 +24,8 @@ public class Item : MonoBehaviour
     private int itemLayerMask;
 
     public string partName;
+    public Vector3 spawnPosition;
+    public Quaternion spawnRotation;
 
     void Start()
     {

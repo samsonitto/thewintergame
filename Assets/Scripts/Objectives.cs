@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.EventSystems;
 
 public class Objectives : MonoBehaviour
 {
@@ -10,6 +11,8 @@ public class Objectives : MonoBehaviour
     private GameObject player;
     private GameObject itemManager;
     public Text nextObjective;
+    public Text nextObjectiveInfo;
+    public Text distanceToTheNextObject;
     private int objIndex;
     private GameObject currentObjective;
 
@@ -20,12 +23,13 @@ public class Objectives : MonoBehaviour
         itemManager = GameObject.FindWithTag("ItemManager");
         currentObjective = gameObjectives[objIndex];
         StartCoroutine(ShowNextObjective());
+        
     }
 
     // Update is called once per frame
     void Update()
     {
-        
+        ShowDistance();
     }
 
     private IEnumerator ObjectiveCompleted()
@@ -36,6 +40,7 @@ public class Objectives : MonoBehaviour
         {
             objIndex++;
             currentObjective = gameObjectives[objIndex];
+            ShowObjectiveInfo();
             StartCoroutine(ShowNextObjective());
         }
     }
@@ -43,13 +48,15 @@ public class Objectives : MonoBehaviour
     private IEnumerator ShowNextObjective()
     {
         nextObjective.text = "Your next objective is to collect " + currentObjective.GetComponent<Item>().partName + "! \nFollow the distance to the next objective!\n(Press [Tab] to see your next objective)";
+        ShowObjectiveInfo();
         yield return new WaitForSeconds(10);
+        SpawnItem();
         nextObjective.text = "";
     }
 
     public void CheckForObjective(GameObject obj)
     {
-        if(obj == currentObjective)
+        if(obj.GetComponent<Item>().partName == currentObjective.GetComponent<Item>().partName)
         {
             StartCoroutine(ObjectiveCompleted());
         }
@@ -57,6 +64,24 @@ public class Objectives : MonoBehaviour
 
     public void ShowObjectiveInfo()
     {
-        nextObjective.text = "Objective " + objIndex + 1 + ": Collect " + currentObjective.GetComponent<Item>().partName + ". (Follow the distance)";
+        nextObjectiveInfo.text = "Objective " + (objIndex + 1) + ": Collect " + currentObjective.GetComponent<Item>().partName + ". (Follow the distance)";
+    }
+
+    public void ShowDistance()
+    {
+        float distance = Vector3.Distance(player.transform.position, currentObjective.transform.position);
+
+        distanceToTheNextObject.text = "Distance: " + distance;
+    }
+
+    public void SpawnItem()
+    {
+        //Vector3 spawnPos = currentObjective.GetComponent<Item>().spawnPosition;
+        //Quaternion spawnRot = currentObjective.GetComponent<Item>().spawnRotation;
+        //print(spawnPos);
+        //Instantiate(currentObjective, spawnPos, spawnRot);
+        //print(currentObjective.transform.position);
+
+        currentObjective.SetActive(true);
     }
 }

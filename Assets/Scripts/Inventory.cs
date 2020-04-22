@@ -80,7 +80,7 @@ public class Inventory : MonoBehaviour
             
             if (!hit.transform.IsChildOf(player.transform))
             {
-                GetComponent<FirstPersonAIO>().ShowInfo(hit.transform.gameObject.name, true);
+                GetComponent<FirstPersonAIO>().ShowInfo(hit.transform.gameObject.GetComponent<Item>().partName, true);
             }
             
 
