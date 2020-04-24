@@ -71,7 +71,7 @@ The crafting info shows you what items do you need to craft the item, that you a
 ## Weapon
 Weapon can be equipped by clicking the weapon icon in the inventory menu, weapon can be unequipped by clicking the E button.
 You can shoot the weapon by clicking the left mouse button. The shooting is made with RayCastHit. Ray is shooting from the fps camera forward.
-When aminal gets shot, there is a blood impact effect (particle system).
+When animal gets shot, there is a blood impact effect (particle system).
 
 ## Flashlight
 Can be equipped / unequipped, tuned on / off.
@@ -121,14 +121,14 @@ Pause menu has 4 buttons: Resume, Restart, Main Menu, Quit. Those are pretty sel
 | 17.04.2020 | 5h       | Animal Animations, Animal angle adjustment success                           |
 | 21.04.2020 | 5h       | Objectives, Airplane parts, minimap                                          |
 | 22.04.2020 | 5h       | Objectives, Animal movement bug fixes, Main menu, Death scene, Victory scene |
-| 24.04.2020 | 5h       | Bug fixes, Pause Menu, documentation                                         |
-| Total      | 76h      |                                                                              |
+| 24.04.2020 | 9h       | Bug fixes, Pause Menu, documentation                                         |
+| Total      | 80h      |                                                                              |
 
 # Bugs
 There are some bugs in this game, I did not have time to fix them all.
 
 ## Animals
-Sometimes animals walk inside the groud, but very rarely. I think it happens after the collisions with trees.
+Sometimes animals walk inside the ground, but very rarely. I think it happens after the collisions with trees.
 Animals get stuck in the terrain. Especially when trying to run away from the player. Does not happen frequently when walking.
 
 ## Player
@@ -137,14 +137,14 @@ Player can't die when falling from high up.
 
 # Left out Features
 I have left out bunch of features, that were supposed to be in this game.
-Crafting, clothing, cooking. I've created the campfire and was able to light it and put it down, but did not have time to emplement the cooking.
-Weather effects on the player, as we are in siberia and it's a winter. For this I needed to implement the clothing and more crafting.
+Crafting, clothing, cooking. I've created the campfire and was able to light it and put it down, but did not have time to implement the cooking.
+Weather effects on the player, as we are in Siberia and it's a winter. For this I needed to implement the clothing and more crafting.
 I was able to implement the crafting, for example the campfire (you can still craft it in the game, if you can find wood).
 It was challenging to cut down the trees that are painted by the terrain tools.
 I also wanted to add the inventory to everything: campfire, animals, Airplane end so on.
 
 # Overview
-All in all I am satified with the game, even thouhg it is little buggy. I did not have any previous experience with game development,
+All in all I am satisfied with the game, even though it is little buggy. I did not have any previous experience with game development,
 so I had to learn a lot. The learning took a lot of time, but I've learned a lot and I belive that I can make games now. At first I thought that
 this course was useless for me, but at the end it was very fun to learn game programming.
 
