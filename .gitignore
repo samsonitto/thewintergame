@@ -9,8 +9,8 @@
 /[Tt]emp/
 /[Oo]bj/
 /[Pp]ackages/
-#/[Bb]uild/
-#/[Bb]uilds/
+/[Bb]uild/
+/[Bb]uilds/
 /[Ll]ogs/
 
 # MemoryCaptures can get excessive in size.

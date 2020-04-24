@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class CraftableItem : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 {
@@ -31,7 +32,6 @@ public class CraftableItem : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
     {
         if (hovered)
         {
-            print("step0");
             if (Input.GetMouseButtonDown(0))
             {
                 CheckForRequiredItems();
@@ -43,19 +43,16 @@ public class CraftableItem : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
             {
                 if(i == item.Length - 1)
                 {
-                    items += (item[i].transform.name + ".");
-                    print("step" + i);
+                    items += (item[i].GetComponent<Item>().partName + ".");
                 }
 
                 else
                 {
-                    items += (item[i].transform.name + ", ");
-                    print("step" + i);
+                    items += (item[i].GetComponent<Item>().partName + ", ");
                 }
                     
             }
-            print("items: " + items);
-            print(inventoryInfo.text);
+            //print(inventoryInfo.text);
             inventoryInfo.text = "To craft " + thisItem.transform.name + " you need these items: " + items;
         }
         else
@@ -92,27 +89,54 @@ public class CraftableItem : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
 
             if (itemsFound >= requiredItems)
             {
-                Vector3 playerPos = player.transform.position;
-                Vector3 playerDirection = player.transform.forward;
-                Quaternion playerRotation = player.transform.rotation;
-                float spawnDistance = 3;
-
-                Vector3 spawnPos = playerPos + playerDirection * spawnDistance;
-
-                Instantiate(thisItem, spawnPos, playerRotation);
-
-                for (int i = 0; i < requiredItems; i++)
+                if(thisItem.GetComponent<Item>().partName != "Endgame")
                 {
-                    Destroy(itemsUsedForCrafting[i]);
+                    Vector3 playerPos = player.transform.position;
+                    Vector3 playerDirection = player.transform.forward;
+                    Quaternion playerRotation = player.transform.rotation;
+                    float spawnDistance = 3;
+
+                    Vector3 spawnPos = playerPos + playerDirection * spawnDistance;
+
+                    Instantiate(thisItem, spawnPos, playerRotation);
+
+                    for (int i = 0; i < requiredItems; i++)
+                    {
+                        Destroy(itemsUsedForCrafting[i]);
+                    }
                 }
+                else
+                {
+                    GameObject spitBody = GameObject.FindWithTag("AirplaneBody");
+                    float distanceToEndGame = Vector3.Distance(player.transform.position, spitBody.transform.position);
+                    if(distanceToEndGame < spitBody.GetComponent<Item>().endGameRadius)
+                    {
+                        Vector3 spawnPos = spitBody.transform.position;
+                        Quaternion spawnRotation = spitBody.transform.rotation;
+
+                        Destroy(spitBody);
+
+                        Instantiate(thisItem, spawnPos, spawnRotation);
+
+                        for (int i = 0; i < requiredItems; i++)
+                        {
+                            Destroy(itemsUsedForCrafting[i]);
+                        }
+
+                        Cursor.visible = true;
+                        player.GetComponent<FirstPersonAIO>().lockAndHideCursor = false;
+                        SceneManager.LoadScene(3);
+                    }
+                    else
+                    {
+                        //player.GetComponent<FirstPersonAIO>().info.text = "You aren't close enough to the Airplane Body";
+                        //inventoryInfo.text = "You aren't close enough to the Airplane Body";
+                        StartCoroutine(infoTimer("You aren't close enough to the Airplane Body", 3f));
+                    }
+                }
+                
             }
-
         }
-    }
-
-    public void ShowInfo()
-    {
-
     }
 
     public void OnPointerEnter(PointerEventData eventData)
@@ -122,6 +146,13 @@ public class CraftableItem : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
     public void OnPointerExit(PointerEventData eventData)
     {
         hovered = false;
+    }
+
+    IEnumerator infoTimer(string msg, float time)
+    {
+        player.GetComponent<FirstPersonAIO>().info.text = msg;
+        yield return new WaitForSeconds(time);
+        player.GetComponent<FirstPersonAIO>().info.text = "";
     }
 
 

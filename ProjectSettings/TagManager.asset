@@ -12,6 +12,7 @@ TagManager:
   - Info
   - CraftingManager
   - Terrain
+  - AirplaneBody
   layers:
   - Default
   - TransparentFX

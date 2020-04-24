@@ -27,6 +27,9 @@ public class Item : MonoBehaviour
     public Vector3 spawnPosition;
     public Quaternion spawnRotation;
 
+    public float endGameRadius;
+    public bool itemDropped = false;
+
     void Start()
     {
         itemLayerMask = LayerMask.GetMask("Item");
@@ -50,12 +53,24 @@ public class Item : MonoBehaviour
             if (Input.GetKeyDown(KeyCode.T))
                 UnequipFlashlight();
         }
+
+        if (itemDropped)
+        {
+            StartCoroutine(droppedItemTimer());
+        }
+        else
+        {
+            StopCoroutine(droppedItemTimer());
+        }
     }
 
     void OnDrawGizmosSelected()
     {
         Gizmos.color = Color.red;
         Gizmos.DrawWireSphere(transform.position, pickupRadius);
+
+        Gizmos.color = Color.green;
+        Gizmos.DrawWireSphere(transform.position, endGameRadius);
 
     }
 
@@ -75,5 +90,11 @@ public class Item : MonoBehaviour
     {
         flashlightEquipped = false;
         this.gameObject.SetActive(false);
+    }
+
+    public IEnumerator droppedItemTimer()
+    {
+        yield return new WaitForSeconds(30);
+        Destroy(this.gameObject);
     }
 }

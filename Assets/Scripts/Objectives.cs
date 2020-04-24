@@ -15,15 +15,16 @@ public class Objectives : MonoBehaviour
     public Text distanceToTheNextObject;
     private int objIndex;
     private GameObject currentObjective;
+    private GameObject spitBody;
 
     void Start()
     {
         objIndex = 0;
         player = GameObject.FindWithTag("Player");
         itemManager = GameObject.FindWithTag("ItemManager");
+        spitBody = GameObject.FindWithTag("AirplaneBody");
         currentObjective = gameObjectives[objIndex];
         StartCoroutine(ShowNextObjective());
-        
     }
 
     // Update is called once per frame
@@ -43,14 +44,22 @@ public class Objectives : MonoBehaviour
             ShowObjectiveInfo();
             StartCoroutine(ShowNextObjective());
         }
+        else
+        {
+            currentObjective = spitBody;
+            nextObjective.text = "You have all the parts now,\nhead back to the airplane and fix it \nby clicking \"Airplane\" in the crafting menu";
+            nextObjectiveInfo.text = "Last objective: Fix the airplane by clicking \"Airplane\" in the crafting menu";
+            yield return new WaitForSeconds(5);
+            nextObjective.text = "";
+        }
     }
 
     private IEnumerator ShowNextObjective()
     {
         nextObjective.text = "Your next objective is to collect " + currentObjective.GetComponent<Item>().partName + "! \nFollow the distance to the next objective!\n(Press [Tab] to see your next objective)";
         ShowObjectiveInfo();
-        yield return new WaitForSeconds(10);
         SpawnItem();
+        yield return new WaitForSeconds(5);
         nextObjective.text = "";
     }
 
@@ -76,12 +85,6 @@ public class Objectives : MonoBehaviour
 
     public void SpawnItem()
     {
-        //Vector3 spawnPos = currentObjective.GetComponent<Item>().spawnPosition;
-        //Quaternion spawnRot = currentObjective.GetComponent<Item>().spawnRotation;
-        //print(spawnPos);
-        //Instantiate(currentObjective, spawnPos, spawnRot);
-        //print(currentObjective.transform.position);
-
         currentObjective.SetActive(true);
     }
 }

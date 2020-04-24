@@ -49,7 +49,7 @@ public class Inventory : MonoBehaviour
             
         }
 
-        if (inventoryEnabled)
+        if (inventoryEnabled || PauseMenu.gameIsPaused || MainMenu.menuIsEnabled)
         {
             Cursor.visible = true;
             player.GetComponent<FirstPersonAIO>().lockAndHideCursor = false;
@@ -88,15 +88,16 @@ public class Inventory : MonoBehaviour
             {
                 GameObject item = hit.transform.gameObject.gameObject;
                 itemPickedUp = item;
+                item.GetComponent<Item>().itemDropped = false;
 
-                if(item.GetComponent<Item>().type != "Campfire")
+                if(item.GetComponent<Item>().type != "Campfire" && item.GetComponent<Item>().partName != "Airplane Body")
                 {
                     AddItem(item);
                     player.GetComponent<Objectives>().CheckForObjective(item);
                 }
                     
             }            
-
+            
             if (Input.GetKeyDown(KeyCode.G))
             {
                 isLit = !isLit;

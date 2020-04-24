@@ -75,16 +75,6 @@ public class Animal : MonoBehaviour
             Walk(false);
             agent.speed = runningSpeed;
 
-            //if(distance <= interactionRadius)
-            //{
-            //    FaceTarget();
-            //    Run(false);
-            //    animator.SetBool("IsIdle", true);
-            //    Attack();
-                
-            //    agent.speed = 0f;
-            //}
-
             if(attackTimer >= timeBetweenAttacks && playerInRange)
             {
 
@@ -118,7 +108,7 @@ public class Animal : MonoBehaviour
 
         if (health <= 0)
         {
-            StartCoroutine(Die());
+            Die();
         }
 
     }
@@ -178,7 +168,6 @@ public class Animal : MonoBehaviour
         Gizmos.DrawWireSphere(transform.position, lookRadius);
         Gizmos.color = Color.yellow;
         Gizmos.DrawWireSphere(transform.position, interactionRadius);
-
     }
 
     public void OnTriggerEnter(Collider other)
@@ -217,15 +206,15 @@ public class Animal : MonoBehaviour
         for(int i = 0; i < item.Length; i++)
         {
             GameObject droppedItem = Instantiate(item[i], transform.position, Quaternion.identity);
+            droppedItem.GetComponent<Item>().itemDropped = true;
         }
     }
 
-    IEnumerator Die()
+    public void Die()
     {
         agent.speed = 0f;
         //Run(false);
         Dead();
-        yield return new WaitForSeconds(deathTime);
         DropItems();
         Destroy(this.gameObject);
     }

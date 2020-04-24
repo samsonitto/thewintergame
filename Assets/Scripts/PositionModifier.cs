@@ -9,6 +9,7 @@ public class PositionModifier : MonoBehaviour
     private Vector3 posCur;
     private Quaternion rotCur;
     private LayerMask layerMask;
+    public float distanceFromTheGround;
 
     void OnEnable()
     {
@@ -32,8 +33,9 @@ public class PositionModifier : MonoBehaviour
         if (Physics.Raycast(ray, out hit, 1.5f, layerMask))
         {
             Debug.DrawLine(transform.position, hit.point, Color.green);
+            change = hit.distance - distanceFromTheGround;
             rotCur = Quaternion.FromToRotation(transform.up, hit.normal) * transform.rotation;
-            posCur = new Vector3(transform.position.x, hit.point.y, transform.position.z);
+            posCur = new Vector3(transform.position.x, hit.point.y - change, transform.position.z);
             //change = hit.distance - 
 
             grounded = true;
@@ -47,8 +49,8 @@ public class PositionModifier : MonoBehaviour
 
         if (grounded)
         {
-            transform.position = Vector3.Lerp(transform.position, posCur, Time.deltaTime * 5);
-            transform.rotation = Quaternion.Lerp(transform.rotation, rotCur, Time.deltaTime * 5);
+            transform.position = Vector3.Lerp(transform.position, posCur, Time.deltaTime * 2);
+            transform.rotation = Quaternion.Lerp(transform.rotation, rotCur, Time.deltaTime * 2);
         }
         //else
         //{

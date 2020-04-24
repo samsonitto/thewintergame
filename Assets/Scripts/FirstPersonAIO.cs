@@ -45,6 +45,7 @@
 /// Made changes that you think should come "Out of the box"? E-mail the modified Script with A new entry on the top of the Change log to: modifiedassets@aedangraves.info
 
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using System.Linq;
 using System.Collections;
@@ -361,6 +362,8 @@ public class BETA_SETTINGS{
         #region Dynamic Settings
         info.GetComponent<Text>().enabled = false;
         StartCoroutine(addHealth());
+        StartCoroutine(maxThirstReached());
+        StartCoroutine(maxHungerReached());
         #endregion
     }
 
@@ -427,11 +430,6 @@ public class BETA_SETTINGS{
             hunger += hungerIncreaseRate * Time.deltaTime;
             thirst += thirstIncreaseRate * Time.deltaTime;
         }
-
-        if (thirst >= maxThirst)
-            health -= 2;
-        if (hunger >= maxHunger)
-            health -= 1;
 
         if(health <= 0)
         {
@@ -802,10 +800,44 @@ public class BETA_SETTINGS{
         }
     }
 
+    IEnumerator maxThirstReached()
+    {
+        while (true)
+        {
+            if(thirst >= maxThirst)
+            {
+                health -= maxHealth * 0.05f;
+                yield return new WaitForSeconds(1);
+            }
+            else
+            {
+                yield return null;
+            }
+        }
+    }
+
+    IEnumerator maxHungerReached()
+    {
+        while (true)
+        {
+            if (hunger >= maxHunger)
+            {
+                health -= maxHealth * 0.05f;
+                yield return new WaitForSeconds(1);
+            }
+            else
+            {
+                yield return null;
+            }
+        }
+    }
+
     public void Die()
     {
         dead = true;
-        //print("You are dead");
+        Cursor.visible = true;
+        lockAndHideCursor = false;
+        SceneManager.LoadScene(2);
     }
 
     public void Drink(float decreaseRate)
@@ -872,16 +904,17 @@ public class BETA_SETTINGS{
     {
         info.GetComponent<Text>().enabled = isHovering;
 
-        if (item.Split('(')[0] == "Campfire")
+        if(item != "nothing" && item != "Airplane Body")
         {
-            info.text = "Press [G] to turn on/off";
+            if (item == "Campfire")
+            {
+                info.text = "Press [G] to turn on/off";
+            }
+            else
+            {
+                info.text = "Press [F] to pick up " + item;
+            }
         }
-        else
-        {
-            info.text = "Press [F] to pick up " + item;
-        }
-        
-        
     }
 
     #endregion
