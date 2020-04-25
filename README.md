@@ -1,5 +1,9 @@
 # Survive The Crash
 
+* Samson Azizyan
+* M3156
+* Game Programming (spring 2020), JAMK
+
 # Story
 You have crashed somewhere in the uncharted territory of the Siberia.
 Your Super Spitfire Airplane is in very poor condition, you need to fix it to get home.
@@ -51,6 +55,7 @@ By default animals are roaming around the terrain. When the player enters the lo
 and if the animal gets to the player in time, it will kill the player. Animals can be shot and killed by the player. If animal's health gets the 30%, animal
 will start running away from the player. When animal dies it drops items, that the player needs to survive.
 The challenge here was to align the animal to the terrain correctly as it moves on the hills. I've done it by using the RayCastHit.
+Animals have 3 animations: walk, run and attack. I had the death animation also implemented, but it did not work properly so I removed it.
 
 ## Items
 There are various types of items in the game: water, meat, weapon, flashlight, airplane parts, animal skin (useless in this version), silk (useless in this version)
@@ -60,6 +65,7 @@ Airplane parts are crucial for the completion of the game.
 Items can be picked up. After you have picked up the items you can see them in the inventory.
 I was trying to add the feature where you can drop the items, but the items were dropping through the ground after the intantiation.
 Items that are dropped by animals will disappear after 30 seconds, I used Coroutine for this.
+Most of the items such as water, meat, silk and animal skin do not have a proper models. Those items are rendered in game as cubes with different colors.
 
 ## Inventory
 Player can access the inventory by pressing TAB. In inventory you can see all of the items, tha you have picked up.
