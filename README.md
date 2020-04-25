@@ -4,12 +4,46 @@
 * M3156
 * Game Programming (spring 2020), JAMK
 
+# Table of Contents 
+
+<!--**Pidä sisällysluettelo kunnossa, eli päivitä sitä tarpeen mukaan! Huomaa MarkDown-ankkurilinkitys**-->
+
+- [Survive The Crash](#survive-the-crash)
+- [Table of Contents](#table-of-contents)
+- [Story](#story)
+- [Installation](#installation)
+    - [Windows version (Recommended)](#windows-version-recommended)
+    - [Web version](#web-version)
+- [How To Play](#how-to-play)
+  - [Objectives](#objectives)
+  - [Controls](#controls)
+- [Game Mechanics](#game-mechanics)
+  - [Player](#player)
+  - [Terrain](#terrain)
+  - [Animals](#animals)
+  - [Items](#items)
+  - [Inventory](#inventory)
+  - [Weapon](#weapon)
+  - [Flashlight](#flashlight)
+  - [Objective mechanics](#objective-mechanics)
+  - [UI](#ui)
+- [Used Technoligies](#used-technoligies)
+- [Used Tutorials](#used-tutorials)
+- [Used Assets](#used-assets)
+- [Work Hours](#work-hours)
+- [Bugs](#bugs)
+  - [Animals](#animals-1)
+  - [Player](#player-1)
+- [Left out Features](#left-out-features)
+- [Overview](#overview)
+- [Grade suggestion](#grade-suggestion)
+
 # Story
 You have crashed somewhere in the uncharted territory of the Siberia.
 Your Super Spitfire Airplane is in very poor condition, you need to fix it to get home.
 You need to search the territory for the plane parts. Ne aware of the dangerous animals and your hunger and thirst.
 
-## Installation
+# Installation
 Download the game from the link below, unzip it and run the WinterSurvival.exe
 ### [Windows version (Recommended)](http://survive.codesamson.com/SurviveTheCrash.zip)
 
@@ -82,7 +116,7 @@ When animal gets shot, there is a blood impact effect (particle system).
 ## Flashlight
 Can be equipped / unequipped, tuned on / off.
 
-## Objectives
+## Objective mechanics
 There are 12 objectives, first two are for picking up the rifle and the flashlight. The next 9 objectives are for searching for the airplane parts.
 The last objective is to get back to the crashed airplane and fix it. You can see the objectives as they pop up in the upper left corner of the screen and in the inventory menu.
 
@@ -128,7 +162,8 @@ Pause menu has 4 buttons: Resume, Restart, Main Menu, Quit. Those are pretty sel
 | 21.04.2020 | 5h       | Objectives, Airplane parts, minimap                                          |
 | 22.04.2020 | 5h       | Objectives, Animal movement bug fixes, Main menu, Death scene, Victory scene |
 | 24.04.2020 | 9h       | Bug fixes, Pause Menu, documentation                                         |
-| Total      | 80h      |                                                                              |
+| 25.04.2020 | 1h       | Documentation                                                                |
+| Total      | 81h      |                                                                              |
 
 # Bugs
 There are some bugs in this game, I did not have time to fix them all.
