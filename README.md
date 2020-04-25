@@ -82,22 +82,22 @@ When animal gets shot, there is a blood impact effect (particle system).
 ## Flashlight
 Can be equipped / unequipped, tuned on / off.
 
-### Objectives
+## Objectives
 There are 12 objectives, first two are for picking up the rifle and the flashlight. The next 9 objectives are for searching for the airplane parts.
 The last objective is to get back to the crashed airplane and fix it. You can see the objectives as they pop up in the upper left corner of the screen and in the inventory menu.
 
-### UI
+## UI
 The game has bunch of different UIs. In game UI shows health, hunger, thirst, minimap, distance to the next objective, item info, objectives.
 Main menu UI has the Play, How To and Quit buttons. By pressing the How To button you will see the controls. Death and Victory menus are almost identical.
 Pause menu has 4 buttons: Resume, Restart, Main Menu, Quit. Those are pretty self explanatory. Inventory menu is also part of the UI.
 
-## Used Technoligies
+# Used Technoligies
 * Unity 2019.3.7f1
 * Microsoft Visual Studio Community 2019
 * Blender
 * C#
 
-## Used Tutorials
+# Used Tutorials
 * [How to make Terrain in Unity](https://www.youtube.com/watch?v=MWQv2Bagwgk)
 * [First Person Movement in Unity](https://www.youtube.com/watch?v=_QajrabyTJc)
 * [Creating a Survival Game in Unity 2018](https://www.youtube.com/watch?v=JhkoYxuZ2UI&t=194s)
@@ -105,7 +105,7 @@ Pause menu has 4 buttons: Resume, Restart, Main Menu, Quit. Those are pretty sel
 * [PAUSE MENU in Unity](https://www.youtube.com/watch?v=JivuXdrIHK0&t=304s)
 * [How to make a Minimap in Unity](https://www.youtube.com/watch?v=28JTTXqMvOU)
 
-## Used Assets
+# Used Assets
 * [First Person All-in-One (FREE)](https://assetstore.unity.com/packages/tools/input-management/first-person-all-in-one-135316)
 * [Rifle (FREE)](https://assetstore.unity.com/packages/3d/props/guns/rifle-25668)
 * [Super Spitfire (FREE)](https://assetstore.unity.com/packages/3d/vehicles/air/super-spitfire-53217)
@@ -113,7 +113,7 @@ Pause menu has 4 buttons: Resume, Restart, Main Menu, Quit. Those are pretty sel
 * [Tree Pack 2 (FREE)](https://assetstore.unity.com/packages/3d/vegetation/trees/tree-pack-2-67117)
 * [Animal pack deluxe v2 (€4.46)](https://assetstore.unity.com/packages/3d/characters/animals/animal-pack-deluxe-v2-144071)
 
-## Work Hours
+# Work Hours
 | Date       | Duration | Task                                                                         |
 | ---------- | -------- | ---------------------------------------------------------------------------- |
 | 30.03.2020 | 8h       | Terrain, First person controller                                             |
@@ -154,5 +154,5 @@ All in all I am satisfied with the game, even though it is little buggy. I did n
 so I had to learn a lot. The learning took a lot of time, but I've learned a lot and I belive that I can make games now. At first I thought that
 this course was useless for me, but at the end it was very fun to learn game programming.
 
-## Grade suggestion
+# Grade suggestion
 I suggest 5, because I have spent a lot of time on this game and the game has a lot of game mechanics. It's not perfect, but I've put a lot of work into it.
